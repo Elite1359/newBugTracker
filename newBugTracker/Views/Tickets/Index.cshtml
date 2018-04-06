@@ -1,0 +1,91 @@
+﻿@model IEnumerable<newBugTracker.Models.Ticket>
+
+@{
+	ViewBag.Title = "Index";
+}
+
+<div class="jumbotron">
+	<h1 class="text-center">Ticket Index</h1>
+</div>
+@*<p>
+	@Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayName("Assigned Developer")
+			</th>
+			<th>
+				@Html.DisplayName("Owner")
+			</th>
+			<th>
+				@Html.DisplayName("Project")
+			</th>
+			<th>
+				@Html.DisplayName("Priority")
+			</th>
+			<th>
+				@Html.DisplayName("Status")
+			</th>
+			<th>
+				@Html.DisplayName("Type")
+			</th>
+			<th>
+				@Html.DisplayName("Ticket")
+			</th>
+			<th>
+				@Html.DisplayName("Description")
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Created)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Updated)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.AssignedToUser.FullName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Project.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TicketPriority.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TicketStatus.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TicketType.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Title)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Description)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Created)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Updated)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+					@Html.ActionLink("Details", "Details", new { id = item.Id }) |
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

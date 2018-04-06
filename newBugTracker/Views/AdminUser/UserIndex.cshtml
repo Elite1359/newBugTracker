@@ -1,0 +1,88 @@
+﻿@using newBugTracker.Helpers
+@using newBugTracker.Models
+@model IEnumerable<newBugTracker.Models.ApplicationUser>
+
+
+@{
+	ViewBag.Title = "UserIndex";
+}
+
+<div class="jumbotron">
+	<h1 class="text-center">User Index</h1>
+</div>
+
+@*@Html.ListBox("SelectedRoles", Model.Roles)*@
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.FirstName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.LastName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Email)
+			</th>
+			<th>
+				@Html.DisplayName("Roles")
+			</th>
+			<th>
+				@Html.DisplayName("Projects")
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(model => user.FirstName)
+				</td>
+				<td>
+					@Html.DisplayFor(model => user.LastName)
+				</td>
+				<td>
+					@Html.DisplayFor(model => user.Email)
+				</td>
+				<td>
+					@{
+						var roleHelper = new UserRolesHelper();
+						//var myRoles = roleHelper.ListUserRoles(user.Id);
+					}
+					@roleHelper.ListUserRoles(user.Id).FirstOrDefault()
+				</td>
+				<td>
+					@{
+						var projectHelper = new ProjectHelper();
+						var myProjects = projectHelper.ListUserProjects(user.Id);
+					}
+					@foreach (var project in myProjects)
+					{
+						@project.Name;
+						<br />
+					}
+				</td>
+				<td>
+					@{
+						var userRolesHelper = new UserRolesHelper();
+						var adminRole = userRolesHelper.IsUserInRole(user.Id, "Admin");
+					}
+					@if (User.IsInRole("Admin") && adminRole == false)
+					{
+						@*@Html.ActionLink("Edit", "Edit", new { id = user.Id }) |*@
+						@Html.ActionLink("Clear Roles", "ClearRoles", "Admin", new { userId = user.Id }, null) @:|
+						@Html.ActionLink("Assign Role", "RoleAssign", "AdminUser", new { id = user.Id }, null) @:|
+					}
+					@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+					{
+						@Html.ActionLink("Assign Project", "ProjectAssign", "AdminUser", new { id = user.Id }, null) @:|
+						@Html.ActionLink("Assign Ticket", "TicketAssign", "AdminUser", new { id = user.Id }, null)
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

@@ -1,0 +1,283 @@
+﻿@model newBugTracker.Models.Ticket
+@using newBugTracker.Models
+@using newBugTracker.Helpers
+@using Microsoft.AspNet.Identity
+
+@{
+	ViewBag.Title = "Details";
+}
+
+<div class="row">
+	<div class="col-lg-6">
+		<h2>Ticket Details</h2>
+		<dl class="dl-horizontal">
+			<dt>
+				@Html.DisplayName("Assigned User :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.AssignedToUser.FullName)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Owner User :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.OwnerUser.FullName)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Project :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.Project.Name)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Ticket Priority :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.TicketPriority.Name)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Ticket Status :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.TicketStatus.Name)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Ticket Type :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.TicketType.Name)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Ticket Title :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.Title)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Ticket Description :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.Description)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Created :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.Created)
+			</dd>
+
+			<dt>
+				@Html.DisplayName("Updated :")
+			</dt>
+
+			<dd>
+				@Html.DisplayFor(model => model.Updated)
+			</dd>
+
+		</dl>
+		<p>
+			@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+			@Html.ActionLink("Back to List", "Index")
+		</p>
+	</div>
+
+	<div class="col-md-6">
+		<h2>Ticket Comments</h2>
+		<!-- DIRECT CHAT PRIMARY -->
+		<div class="box box-primary direct-chat direct-chat-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">Comments</h3>
+				<div class="box-tools pull-right">
+					@*<span data-toggle="tooltip" title="3 New Messages" class="badge bg-light-blue">3</span>*@
+					<button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Comments" data-widget="chat-pane-toggle">
+						<i class="fa fa-comments"></i>
+					</button>
+					<button type="button" class="btn btn-box-tool" data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<!-- Conversations are loaded here -->
+				<div class="direct-chat-messages">
+					<!-- Message. Default to the left -->
+					@foreach (var comment in Model.TicketComment.OrderByDescending(c => c.Created))
+					{
+						<div class="direct-chat-msg">
+							<div class="direct-chat-info clearfix">
+								<span class="direct-chat-name pull-left">@comment.User.FullName</span>
+								<span class="direct-chat-timestamp pull-right">@comment.Created.ToString("MMM ddd d HH:mm yyyy")</span>
+							</div>
+							<!-- /.direct-chat-info -->
+							<img class="direct-chat-img" src="~/images/user1-128x128.jpg" alt="Message User Image">
+							<!-- /.direct-chat-img -->
+							<div class="direct-chat-text">
+								@comment.Comment
+							</div>
+							@if (User.IsInRole("Admin"))
+							{
+								@Html.ActionLink("Edit  ", "Edit", "TicketComments", new { id = comment.Id }, null)
+								@Html.ActionLink("Delete", "Delete", "TicketComments", new { id = comment.Id }, null)
+							}
+							<!-- /.direct-chat-text -->
+						</div>
+						<!-- /.direct-chat-msg -->
+					}
+				</div>
+			</div>
+			<!-- /.box-body -->
+			@using (Html.BeginForm("Create", "TicketComments", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+			{
+				if (AuthorizationHelper.Authorization(Model.OwnerUserId, Model.AssignedToUserId, Model.ProjectId))
+				{
+					@Html.AntiForgeryToken()
+					@Html.Hidden("TicketId", Model.Id)
+					<div class="box-footer">
+						<form action="#" method="post">
+							<div class="input-group">
+								<input type="text" name="Comment" placeholder="Type Message ..." class="form-control">
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary btn-flat">Send</button>
+								</span>
+							</div>
+						</form>
+					</div>
+					<!-- /.box-footer-->
+				}
+			}
+		</div>
+		<!--/.direct-chat -->
+	</div>
+</div>
+
+<br />
+@*<hr style="border-top: 5px solid #000000;" />*@
+
+<div class="row">
+	<div class="col-md-6">
+		<h2>Ticket Attachments</h2>
+		<!-- Box Comment -->
+		<div class="box box-widget">
+			@foreach (var attachment in Model.TicketAttachment.OrderByDescending(c => c.Created))
+			{
+				<div>
+					<div class="box-header with-border">
+						<div class="user-block">
+							<img class="img-circle" src="~/images/user1-128x128.jpg" alt="User Image">
+							<span class="username"><a>@attachment.User.FullName</a></span>
+							<span class="description">@attachment.Created.ToString("MMM ddd d HH:mm yyyy")</span>
+						</div>
+						<!-- /.user-block -->
+						<div class="box-tools">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+						<!-- /.box-tools -->
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<a href="@Url.Action("Details", "TicketAttachments", new { id = attachment.Id })">
+							@if (!String.IsNullOrEmpty(attachment.FileUrl))
+							{
+								<img class="img-responsive pad" src="@Url.Content(attachment.FileUrl)" alt="Attachment">
+							}
+						</a>
+
+						@if (User.IsInRole("Admin"))
+						{
+							<button type="button" class="btn btn-default btn-xs">
+								@Html.ActionLink("Edit  ", "Edit", "TicketAttachments", new { id = attachment.Id }, null)
+							</button>
+							<button type="button" class="btn btn-default btn-xs">
+								@Html.ActionLink("Delete", "Delete", "TicketAttachments", new { id = attachment.Id }, null)
+							</button>
+						}
+					</div>
+					<!-- /.box-body -->
+					<!-- /.box-footer -->
+
+				</div>
+			}
+
+			@using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+			{
+				if (AuthorizationHelper.Authorization(Model.OwnerUserId, Model.AssignedToUserId, Model.ProjectId))
+				{
+					@Html.AntiForgeryToken()
+					@Html.Hidden("TicketId", Model.Id)
+					<div class="box-footer">
+						<form action="#" method="post">
+							<img class="img-responsive img-circle img-sm" src="~/images/user4-128x128.jpg" alt="Alt Text">
+							<!-- .img-push is used to add margin to elements next to floating images -->
+							<div class="img-push">
+								<div class="input-group">
+									<span class="input-group-addon">Attachment</span>
+									<input type="file" class="form-control input-sm" name="file" />
+								</div>
+									<input class="btn-flat btn-primary" type="submit" value="Submit Attachment">
+								@*<input type="text" class="form-control input-sm" placeholder="Press enter to post comment">*@
+							</div>
+						</form>
+					</div>
+				}
+
+				<!-- /.box-footer -->
+			}
+		</div>
+		<!-- /.box -->
+	</div>
+
+	<div class="col-lg-6">
+		<h2>Ticket History</h2>
+		<!-- Box Comment -->
+		<div class="box box-widget">
+			<div class="box-tools">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse">
+					<i class="fa fa-minus"></i>
+				</button>
+			</div>
+			@foreach (var history in Model.TicketHistory.OrderByDescending(h => h.Changed))
+			{
+				var db = new ApplicationDbContext();
+				var Fullname = db.Users.Find(history.UserId).FullName;
+				<div class="box-header with-border">
+					<div class="user-block">
+						<img class="img-circle" src="~/images/user1-128x128.jpg" alt="User Image">
+						<span class="username"><a>@Fullname</a></span>
+						<span class="description">@history.Changed.ToString("MMM ddd d HH:mm yyyy")</span>
+					</div>
+					<!-- /.user-block -->
+					<!-- /.box-tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<!-- post text -->
+					<p>
+						@history.Property @history.OldValue has changed to @history.NewValue
+					</p>
+				</div>
+				<hr style="border-top: 1px solid #000000;" />
+			}
+		</div>
+		<!-- /.box -->
+	</div>
+</div>
