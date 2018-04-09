@@ -16,6 +16,18 @@ namespace newBugTracker.Controllers
             return View(db.Users.ToList());
         }
 
+        public ActionResult ClearRole(string UserId, string AllRoles)
+        {
+            UserRolesHelper roleHelper = new UserRolesHelper();
+
+            //Spin through all roles currently occupied removing the user from them all
+            foreach (var role in roleHelper.ListUserRoles(UserId))
+            {
+                roleHelper.RemoveUserFromRole(UserId, role);
+            }
+
+            return RedirectToAction("UserIndex");
+        }
         ////Assign Roles
         //public ActionResult RoleAssign(string id)
         //{
@@ -54,7 +66,7 @@ namespace newBugTracker.Controllers
         //    return RedirectToAction("Index");
         //}
 
-#region Old Code Role Assign
+        #region Old Code Role Assign
 
         [Authorize(Roles = "Admin")]
         public ActionResult RoleAssign(string id)
@@ -154,13 +166,12 @@ namespace newBugTracker.Controllers
             {
                 ticketHelper.RemoveUserFromTicket(UserId, ticket.Id);
             }
-
             //Next add the user to the selected Projects (AllTickets)
             if (AllTickets != null)
             {
                 foreach (var ticketId in AllTickets)
                 {
-                    ticketHelper.AddUserToTicket(UserId, ticketId);
+                    ticketHelper.AddUserToTicket(UserId, ticketId);                    
                 }
             }
             return RedirectToAction("UserIndex", "AdminUser");

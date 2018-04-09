@@ -73,7 +73,7 @@
 					@if (User.IsInRole("Admin") && adminRole == false)
 					{
 						@*@Html.ActionLink("Edit", "Edit", new { id = user.Id }) |*@
-						@Html.ActionLink("Clear Roles", "ClearRoles", "Admin", new { userId = user.Id }, null) @:|
+						@Html.ActionLink("Clear Role", "ClearRole", "AdminUser", new { userId = user.Id }, null) @:|
 						@Html.ActionLink("Assign Role", "RoleAssign", "AdminUser", new { id = user.Id }, null) @:|
 					}
 					@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))

@@ -92,7 +92,7 @@
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							<li class="active">
+							<li>
 								<a href="@Url.Action("GuestLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl, type = "Admin" })"><i class="fa fa-circle-o"></i>Admin Demo</a>
 							</li>
 							<li>
@@ -106,6 +106,36 @@
 							</li>
 						</ul>
 					</li>
+
+
+
+
+
+
+
+
+					@if (User.IsInRole("Admin"))
+					{
+						<li><a href="@Url.Action("AdminDashboard", "Dashboards")"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+					}
+					@if (User.IsInRole("ProjectManager"))
+					{
+						<li><a href="@Url.Action("ProjectManagerDashboard", "Dashboards")"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+					}
+					@if (User.IsInRole("Developer"))
+					{
+						<li><a href="@Url.Action("DeveloperDashboard", "Dashboards")"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+					}
+					@if (User.IsInRole("Submitter"))
+					{
+						<li><a href="@Url.Action("SubmitterDashboard", "Dashboards")"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+					}
+
+
+
+
+
+
 
 					<!--USER INDEX LINK-->
 					<li>
@@ -155,6 +185,14 @@
 							{
 								<li><a href="@Url.Action("Index", "Tickets")"><i class="fa fa-circle-o"></i> All Tickets</a></li>
 							}
+							@if (!User.IsInRole("Submitter"))
+							{
+								<li><a href="@Url.Action("MyTickets", "Tickets")"><i class="fa fa-circle-o"></i> My Tickets</a></li>
+							}
+							@if (User.IsInRole("Submitter"))
+							{
+								<li><a href="@Url.Action("SubmitterTickets", "Tickets")"><i class="fa fa-circle-o"></i> My Tickets</a></li>
+							}
 							@*<li><a href="@Url.Action("Index", "Tickets", "ProjectTicketIndex")"><i class="fa fa-circle-o"></i> My Tickets</a></li>*@
 						</ul>
 					</li>
@@ -167,7 +205,6 @@
 
 
 			<!-- Content Header (Page header) -->
-			
 			<!-- Main content -->
 			<section class="content container-fluid">
 				<!--------------------------

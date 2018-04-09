@@ -28,6 +28,14 @@ namespace newBugTracker.Helpers
             return (tickets);
         }
 
+        public ICollection<Ticket> ListSubmitterTickets(string userId)
+        {
+            ApplicationUser user = db.Users.Find(userId);
+            var tickets = db.Tickets.Where(t => t.OwnerUserId == userId).ToList();
+            //var tickets = user.AssignedToUser.ToList();
+            return (tickets);
+        }
+
         public bool IsUserOnTicket(string userId, int ticketId)
         {
             var AssignedToId = db.Tickets.FirstOrDefault(t => t.Id == ticketId).AssignedToUserId;

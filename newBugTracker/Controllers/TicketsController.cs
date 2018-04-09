@@ -25,6 +25,16 @@ namespace newBugTracker.Controllers
             return View(tickets.ToList());
         }
 
+        public ActionResult MyTickets()
+        {
+            return View("Index", tixHelper.ListUserTickets(User.Identity.GetUserId()).ToList());
+        }
+
+        public ActionResult SubmitterTickets()
+        {
+            return View("Index", tixHelper.ListSubmitterTickets(User.Identity.GetUserId()).ToList());
+        }
+
         public ActionResult ProjectTicketIndex(int id)
         {
             return View("Index", tixHelper.GetProjectTickets(id));
@@ -48,9 +58,10 @@ namespace newBugTracker.Controllers
         // GET: Tickets/Create
         public ActionResult Create()
         {
+            var userId = User.Identity.GetUserId();
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName");
             ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.ProjectId = new SelectList(db.Users.Find(userId).Project, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
@@ -63,7 +74,8 @@ namespace newBugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId")] Ticket ticket)
-        {            if (ModelState.IsValid)
+        {
+            if (ModelState.IsValid)
             {
                 ticket.Created = DateTime.Now;
                 ticket.OwnerUserId = User.Identity.GetUserId();

@@ -191,6 +191,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminUserController.cs" />
+    <Compile Include="Controllers\DashboardsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminUserViewModel.cs" />
+    <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Project.cs" />
@@ -431,6 +433,10 @@
     <Content Include="Views\AdminUser\RoleAssign.cshtml" />
     <Content Include="Views\AdminUser\ProjectAssign.cshtml" />
     <Content Include="Views\AdminUser\TicketAssign.cshtml" />
+    <Content Include="Views\Dashboards\DeveloperDashboard.cshtml" />
+    <Content Include="Views\Dashboards\ProjectManagerDashboard.cshtml" />
+    <Content Include="Views\Dashboards\SubmitterDashboard.cshtml" />
+    <Content Include="Views\Dashboards\AdminDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -463,7 +469,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>55085</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
